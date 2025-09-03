@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ClookBook – Dashboard</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --accent: #22d3ee;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #060913, #0f172a);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 32px auto;
+        padding: 0 16px;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .header h1 {
+        margin: 0;
+      }
+      .logoutBtn {
+        background: #1f2937;
+        color: #cbd5e1;
+        border: 0;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.15s, transform 0.08s;
+      }
+      .logoutBtn:hover {
+        background: #374151;
+        transform: translateY(-1px);
+      }
+      .logoutBtn:active {
+        transform: translateY(0);
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 6px 0 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: linear-gradient(180deg, #0b1324, #0a1020);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        min-height: 150px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.12s transform;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+      }
+      .add {
+        border: 1px dashed rgba(255, 255, 255, 0.18);
+      }
+      .title {
+        font-weight: 700;
+        text-align: center;
+      }
+      .mutedCenter {
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+        margin-top: 6px;
+      }
+
+      /* Modal */
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .modal {
+        background: #0b1222;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        max-width: 420px;
+        width: 100%;
+        padding: 16px;
+      }
+      label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      input {
+        width: 100%;
+        background: #0c1222;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 10px 12px;
+      }
+      .btns {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 12px;
+      }
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .primary {
+        background: linear-gradient(180deg, #22d3ee, #06b6d4);
+        color: #05101a;
+      }
+      .mutedBtn {
+        background: #1f2937;
+        color: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- Header with Logout -->
+      <div class="header">
+        <h1>📚 ClookBook – Dashboard</h1>
+        <button class="logoutBtn" onclick="logout()">Çıkış</button>
+      </div>
+
+      <p class="muted">
+        Kitap eklemek için “+ Yeni Kitap” kutusuna tıkla. Bir kitap kartına
+        tıklayınca kendi sayfasına gidersin.
+      </p>
+
+      <div id="grid" class="grid"></div>
+    </div>
+
+    <!-- Yeni Kitap Modal -->
+    <div id="modalBg" class="modal-bg" role="dialog" aria-modal="true">
+      <div class="modal">
+        <h3 style="margin: 0 0 12px">Yeni Kitap Ekle</h3>
+        <label for="bookTitle">Kitap Adı</label>
+        <input id="bookTitle" type="text" placeholder="Örn: Suç ve Ceza" />
+        <div class="btns">
+          <button class="mutedBtn" id="cancelBtn">Vazgeç</button>
+          <button class="primary" id="saveBtn">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const grid = document.getElementById("grid");
+      const modalBg = document.getElementById("modalBg");
+      const bookTitleInput = document.getElementById("bookTitle");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const saveBtn = document.getElementById("saveBtn");
+
+      function openModal() {
+        bookTitleInput.value = "";
+        modalBg.style.display = "flex";
+        setTimeout(() => bookTitleInput.focus(), 0);
+      }
+      function closeModal() {
+        modalBg.style.display = "none";
+      }
+      cancelBtn.onclick = closeModal;
+
+      async function fetchBooks() {
+        const res = await fetch("/api/books");
+        const books = await res.json();
+        renderGrid(books);
+      }
+
+      function renderGrid(books) {
+        grid.innerHTML = "";
+
+        // “+ Yeni Kitap” kartı
+        const add = document.createElement("div");
+        add.className = "card add";
+        add.innerHTML = `<div><div class="title">+ Yeni Kitap</div><div class="mutedCenter">Bir kitap eklemek için tıkla</div></div>`;
+        add.onclick = openModal;
+        grid.appendChild(add);
+
+        // Kitap kartları
+        books.forEach((b) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `<div><div class="title">${escapeHtml(
+            b.title
+          )}</div><div class="mutedCenter">Açmak için tıkla</div></div>`;
+          card.onclick = () => (location.href = `/book/${b._id}`);
+          grid.appendChild(card);
+        });
+      }
+
+      function escapeHtml(str = "") {
+        return str.replace(/[&<>"']/g, (m) => {
+          switch (m) {
+            case "&":
+              return "&amp;";
+            case "<":
+              return "&lt;";
+            case ">":
+              return "&gt;";
+            case '"':
+              return "&quot;";
+            case "'":
+              return "&#39;";
+          }
+        });
+      }
+
+      // Yeni Kitap kaydet
+      saveBtn.onclick = async () => {
+        const title = bookTitleInput.value.trim();
+        if (!title) {
+          alert("Lütfen bir kitap adı girin.");
+          return;
+        }
+        try {
+          const res = await fetch("/api/books", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Create failed");
+          }
+          closeModal();
+          fetchBooks(); // grid’i yenile
+        } catch (e) {
+          alert("Kaydedilemedi: " + e.message);
+        }
+      };
+
+      // Modal dışına tıklama kapatsın
+      modalBg.addEventListener("click", (e) => {
+        if (e.target === modalBg) closeModal();
+      });
+
+      // Auth kontrolü: giriş yoksa login'e yönlendir
+      (async function ensureAuth() {
+        const res = await fetch("/api/me");
+        if (!res.ok) {
+          location.href = "/login";
+          return;
+        }
+      })();
+
+      // Basit logout helper
+      async function logout() {
+        await fetch("/api/auth/logout", { method: "POST" });
+        location.href = "/login";
+      }
+
+      fetchBooks();
+    </script>
+  </body>
+</html>

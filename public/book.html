@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ClookBook – Book Page</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --muted: #94a3b8;
+        --text: #e5e7eb;
+        --accent: #22d3ee;
+        --barbg: #0b1222;
+        --barfg: #22d3ee;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: linear-gradient(180deg, #060913, #0f172a);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 16px;
+      }
+      .title {
+        color: #fff;
+        font-weight: 700;
+        font-size: 28px;
+        letter-spacing: 0.2px;
+        margin: 0 0 16px;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(12, 1fr);
+      }
+      .card {
+        grid-column: span 12;
+        background: linear-gradient(180deg, #0b1324, #0a1020);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      .card h2 {
+        color: #fff;
+        font-size: 18px;
+        margin: 0 0 10px;
+      }
+      label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      input {
+        width: 100%;
+        background: #0c1222;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 10px 12px;
+        outline: none;
+      }
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .btns {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #05101a;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.04s ease;
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      .primary {
+        background: linear-gradient(180deg, #22d3ee, #06b6d4);
+      }
+      .muted {
+        background: #1f2937;
+        color: #cbd5e1;
+      }
+      .danger {
+        background: linear-gradient(180deg, #f43f5e, #e11d48);
+        color: #fff;
+      }
+      .ok {
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+      .pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #0c1222;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #b9cff1;
+        font-size: 12px;
+      }
+      .metrics {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .metric {
+        flex: 1 1 160px;
+        background: #0b1222;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .metric .v {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .metric .k {
+        color: #90a0bd;
+        font-size: 12px;
+      }
+      .note {
+        color: #8aa4c7;
+        font-size: 12px;
+        margin-top: 6px;
+      }
+      .hint {
+        color: #9fb4d6;
+        font-size: 12px;
+      }
+      .back {
+        margin-bottom: 12px;
+        display: inline-block;
+        color: #b9cff1;
+        text-decoration: none;
+      }
+      .back:hover {
+        text-decoration: underline;
+      }
+
+      /* Özet progres bar */
+      .progressWrap {
+        background: var(--barbg);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        height: 12px;
+        overflow: hidden;
+      }
+      .progressFill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #22d3ee, #38bdf8);
+        transition: width 0.3s ease;
+      }
+
+      @media (min-width: 1024px) {
+        .leftCol {
+          grid-column: span 8;
+          display: grid;
+          gap: 16px;
+        }
+        .rightCol {
+          grid-column: span 4;
+          display: grid;
+          gap: 16px;
+          align-content: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/dashboard">← Dashboard’a dön</a>
+      <h1 class="title">ClookBook – Book Page</h1>
+
+      <div class="grid">
+        <div class="leftCol">
+          <!-- Kitap Bilgileri -->
+          <section class="card">
+            <h2>Kitap Bilgileri</h2>
+            <div class="row">
+              <div>
+                <label for="bookTitle">Kitap Adı</label>
+                <input
+                  id="bookTitle"
+                  type="text"
+                  placeholder="Örn: Suç ve Ceza"
+                />
+              </div>
+              <div>
+                <label for="startPage">Başlangıç Sayfası</label>
+                <input
+                  id="startPage"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="Örn: 1"
+                />
+              </div>
+            </div>
+            <div class="row" style="margin-top: 12px">
+              <div>
+                <label for="currentPage">Son Geldiğim Sayfa</label>
+                <input
+                  id="currentPage"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="Örn: 37"
+                />
+              </div>
+              <div>
+                <label>Toplam Okunan Sayfa</label>
+                <div class="pill" id="pagesReadPill">0 sayfa</div>
+                <div class="note">
+                  Hesap: <strong>dahilî</strong> — Son − Başlangıç + 1 (negatif
+                  olmaz).
+                </div>
+              </div>
+            </div>
+            <div class="btns" style="margin-top: 12px">
+              <button class="ok" id="saveTitleBtn">Kitap Adını Kaydet</button>
+            </div>
+            <div class="hint" style="margin-top: 6px">
+              Kitap adını düzenleyip kaydedebilirsin.
+            </div>
+          </section>
+
+          <!-- Kronometre -->
+          <section class="card">
+            <h2>Kronometre</h2>
+            <div class="pill" id="timerDisplay">00:00:00</div>
+            <div class="btns" style="margin-top: 12px">
+              <button class="primary" id="startBtn">Başlat</button>
+              <button class="muted" id="pauseBtn">Durdur</button>
+              <button class="danger" id="resetBtn">Sıfırla</button>
+            </div>
+            <div class="hint" style="margin-top: 10px">
+              Okumaya başlarken “Başlat”, ara verince “Durdur”. Seansı
+              kaydedince süre sıfırlanabilir.
+            </div>
+          </section>
+
+          <!-- Seans Özeti -->
+          <section class="card">
+            <h2>Seans Özeti</h2>
+            <div class="btns" style="margin-bottom: 12px">
+              <button class="ok" id="saveSessionBtn">Seansı Kaydet</button>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div class="v" id="elapsedMins">00:00:00</div>
+                <div class="k">Geçen Süre</div>
+              </div>
+              <div class="metric">
+                <div class="v" id="pagesRead">0</div>
+                <div class="k">Okunan Sayfa</div>
+              </div>
+              <div class="metric">
+                <div class="v" id="avgPerPage">—</div>
+                <div class="k">Ortalama (dk/sayfa)</div>
+              </div>
+            </div>
+
+            <div class="note">
+              “Seansı Kaydet”: (Geçen Dakika) ÷ (Okunan Sayfa) → dk/sayfa.
+            </div>
+          </section>
+        </div>
+
+        <!-- Sağ Özet Kolonu -->
+        <div class="rightCol">
+          <section class="card">
+            <h2>Özet</h2>
+
+            <label for="totalPages">Toplam Sayfa</label>
+            <input
+              id="totalPages"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="Örn: 480"
+            />
+
+            <div class="row" style="margin-top: 12px">
+              <div>
+                <label for="startedAt">Başlangıç Tarihi</label>
+                <input id="startedAt" type="date" />
+              </div>
+              <div>
+                <label>Günlük Ortalama</label>
+                <div class="pill" id="avgPerDayPill">— syf/gün</div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 12px">
+              <div>
+                <label>Toplam Okunan Süre</label>
+                <div class="pill" id="totalTimePill">00:00:00</div>
+              </div>
+              <div></div>
+            </div>
+
+            <div style="margin-top: 12px">
+              <label>İlerleme</label>
+              <div class="progressWrap">
+                <div class="progressFill" id="progressFill"></div>
+              </div>
+              <div class="note" id="progressText" style="margin-top: 6px">
+                0%
+              </div>
+            </div>
+
+            <div class="btns" style="margin-top: 12px">
+              <button class="primary" id="saveSummaryBtn">Özeti Kaydet</button>
+            </div>
+            <div class="hint" style="margin-top: 6px">
+              Toplam sayfayı ve başlangıç tarihini kaydedip dilediğinde
+              güncelleyebilirsin.
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---- Auth ----
+      (async function ensureAuth() {
+        const res = await fetch("/api/me");
+        if (!res.ok) {
+          location.href = "/login";
+        }
+      })();
+
+      // ---- URL'den Book ID ----
+      function getBookIdFromURL() {
+        const parts = location.pathname.split("/");
+        return parts[2] || null;
+      }
+      const BOOK_ID = getBookIdFromURL();
+      if (!BOOK_ID) alert("Book ID bulunamadı");
+
+      // ---- Elementler ----
+      const bookTitleEl = document.getElementById("bookTitle");
+      const startPageEl = document.getElementById("startPage");
+      const currentPageEl = document.getElementById("currentPage");
+      const pagesReadPill = document.getElementById("pagesReadPill");
+
+      const timerDisplay = document.getElementById("timerDisplay");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const saveSessionBtn = document.getElementById("saveSessionBtn");
+      const saveTitleBtn = document.getElementById("saveTitleBtn");
+
+      const elapsedMinsEl = document.getElementById("elapsedMins");
+      const pagesReadEl = document.getElementById("pagesRead");
+      const avgPerPageEl = document.getElementById("avgPerPage");
+
+      // Özet
+      const totalPagesEl = document.getElementById("totalPages");
+      const startedAtEl = document.getElementById("startedAt");
+      const progressFill = document.getElementById("progressFill");
+      const progressText = document.getElementById("progressText");
+      const avgPerDayPill = document.getElementById("avgPerDayPill");
+      const saveSummaryBtn = document.getElementById("saveSummaryBtn");
+      const totalTimePill = document.getElementById("totalTimePill");
+
+      // ---- LocalStorage ----
+      const LS_KEY = `clookbook.bookPage.v2.${BOOK_ID}`;
+
+      // ---- Kronometre State ----
+      let timerInterval = null;
+      let startTime = null; // ms
+      let pausedAccum = 0; // ms
+      let isRunning = false;
+
+      // ---- Toplam okuma süresi (kayıtlı seanslardan) ----
+      let totalElapsedMs = 0;
+
+      // ---- Helpers ----
+      const pad = (n) => String(n).padStart(2, "0");
+      function fmtTime(ms) {
+        const totalSec = Math.floor(ms / 1000);
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        return `${pad(h)}:${pad(m)}:${pad(s)}`;
+      }
+      function getElapsedMs() {
+        if (!startTime) return pausedAccum;
+        return isRunning ? Date.now() - startTime + pausedAccum : pausedAccum;
+      }
+      const getElapsedMinutes = () => getElapsedMs() / 60000;
+
+      function updateTimerUI() {
+        const ms = getElapsedMs();
+        timerDisplay.textContent = fmtTime(ms);
+        elapsedMinsEl.textContent = fmtTime(ms);
+      }
+
+      // Inclusive pages read: Son − Başlangıç + 1 (min 0)
+      function computePagesReadInclusive() {
+        const s = parseInt(startPageEl.value, 10);
+        const c = parseInt(currentPageEl.value, 10);
+        if (Number.isNaN(s) || Number.isNaN(c)) return 0;
+        const diff = c - s + 1;
+        return Math.max(0, diff);
+      }
+
+      function updatePagesUI() {
+        const pr = computePagesReadInclusive();
+        pagesReadPill.textContent = `${pr} sayfa`;
+        pagesReadEl.textContent = pr;
+        updateSummaryDerived();
+      }
+
+      function saveToLocalStorage() {
+        const data = {
+          title: bookTitleEl.value || "",
+          startPage: startPageEl.value || "",
+          currentPage: currentPageEl.value || "",
+          totalPages: totalPagesEl.value || "",
+          startedAt: startedAtEl.value || "",
+          timer: { startTime, pausedAccum, isRunning },
+        };
+        localStorage.setItem(LS_KEY, JSON.stringify(data));
+      }
+
+      function loadFromLocalStorage() {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          if (data.title) bookTitleEl.value = data.title;
+          if (data.startPage) startPageEl.value = data.startPage;
+          if (data.currentPage) currentPageEl.value = data.currentPage;
+          if (data.totalPages) totalPagesEl.value = data.totalPages;
+          if (data.startedAt) startedAtEl.value = data.startedAt;
+
+          if (data.timer) {
+            startTime = data.timer.startTime;
+            pausedAccum = data.timer.pausedAccum || 0;
+            isRunning = !!data.timer.isRunning;
+            if (isRunning && startTime) {
+              startInterval();
+            }
+          }
+        } catch (e) {
+          console.warn("LocalStorage parse hatası:", e);
+        }
+        updateTimerUI();
+        updatePagesUI();
+      }
+
+      function startInterval() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimerUI, 200);
+      }
+
+      // ---- Backend ----
+      async function fetchBook() {
+        const res = await fetch(`/api/books/${BOOK_ID}`);
+        if (!res.ok) throw new Error("Book not found");
+        return res.json(); // { book, lastSession }
+      }
+
+      async function fetchSessions() {
+        const res = await fetch(`/api/books/${BOOK_ID}/sessions`);
+        if (!res.ok) throw new Error("Sessions not found");
+        return res.json(); // [ { elapsedMs, ... }, ... ]
+      }
+
+      async function updateBook(data) {
+        const res = await fetch(`/api/books/${BOOK_ID}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Update failed");
+        }
+        return res.json();
+      }
+
+      async function saveSessionToDB(payload) {
+        const res = await fetch(`/api/books/${BOOK_ID}/sessions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Save failed");
+        }
+        return res.json();
+      }
+
+      // ---- Özet Türevleri ----
+      function calcProgressPercent() {
+        const total = parseInt(totalPagesEl.value, 10);
+        const current = parseInt(currentPageEl.value, 10);
+        if (
+          Number.isNaN(total) ||
+          total <= 0 ||
+          Number.isNaN(current) ||
+          current <= 0
+        )
+          return 0;
+        const pct = Math.min(100, Math.max(0, (current / total) * 100));
+        return pct;
+      }
+
+      function daysSinceStart() {
+        const val = startedAtEl.value;
+        if (!val) return 0;
+        const start = new Date(val + "T00:00:00");
+        const now = new Date();
+        const diffDays = Math.floor((now - start) / 86400000) + 1; // bugünü dahil et
+        return Math.max(1, diffDays);
+      }
+
+      function calcAvgPerDay() {
+        const current = parseInt(currentPageEl.value, 10);
+        if (Number.isNaN(current) || current <= 0) return null;
+
+        const days = daysSinceStart();
+        if (days <= 0) return null;
+
+        return current / days; // her zaman 1. sayfadan itibaren
+      }
+
+      function updateSummaryDerived() {
+        const pct = calcProgressPercent();
+        progressFill.style.width = pct.toFixed(1) + "%";
+        progressText.textContent = `${pct.toFixed(1)}%`;
+
+        const avg = calcAvgPerDay();
+        avgPerDayPill.textContent =
+          avg == null ? "— syf/gün" : `${avg.toFixed(2)} syf/gün`;
+      }
+
+      function updateTotalTimeUI() {
+        totalTimePill.textContent = fmtTime(totalElapsedMs);
+      }
+
+      // ---- Eventler ----
+      startBtn.addEventListener("click", () => {
+        if (isRunning) return;
+        startTime = Date.now();
+        isRunning = true;
+        startInterval();
+        saveToLocalStorage();
+      });
+
+      pauseBtn.addEventListener("click", () => {
+        if (!isRunning) return;
+        pausedAccum += Date.now() - startTime;
+        isRunning = false;
+        startTime = null;
+        if (timerInterval) clearInterval(timerInterval);
+        updateTimerUI();
+        saveToLocalStorage();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        isRunning = false;
+        startTime = null;
+        pausedAccum = 0;
+        if (timerInterval) clearInterval(timerInterval);
+        updateTimerUI();
+        saveToLocalStorage();
+      });
+
+      [
+        bookTitleEl,
+        startPageEl,
+        currentPageEl,
+        totalPagesEl,
+        startedAtEl,
+      ].forEach((el) => {
+        el.addEventListener("input", () => {
+          updatePagesUI();
+          updateSummaryDerived();
+          saveToLocalStorage();
+        });
+      });
+
+      saveSessionBtn.addEventListener("click", async () => {
+        const pr = computePagesReadInclusive();
+        const mins = getElapsedMinutes();
+
+        if (pr <= 0) {
+          avgPerPageEl.textContent = "—";
+          return alert("Okunan sayfa sayısı 1 veya daha fazla olmalı.");
+        }
+        if (mins <= 0) {
+          avgPerPageEl.textContent = "—";
+          return alert("Geçen süre 0 dakikadan fazla olmalı.");
+        }
+
+        const avg = mins / pr;
+        avgPerPageEl.textContent = `${avg.toFixed(2)} dk/syf`;
+
+        const payload = {
+          startPage: Number(startPageEl.value || 0),
+          currentPage: Number(currentPageEl.value || 0),
+          elapsedMs: Math.round(getElapsedMs()),
+        };
+
+        try {
+          await saveSessionToDB(payload);
+          // Sıfırla ve toplam süreyi tazele
+          isRunning = false;
+          startTime = null;
+          pausedAccum = 0;
+          if (timerInterval) clearInterval(timerInterval);
+          updateTimerUI();
+          saveToLocalStorage();
+
+          // toplam süreyi tekrar yükle
+          const sessions = await fetchSessions();
+          totalElapsedMs = sessions.reduce(
+            (acc, s) => acc + (s.elapsedMs || 0),
+            0
+          );
+          updateTotalTimeUI();
+
+          alert("Seans kaydedildi.");
+        } catch (e) {
+          console.error(e);
+          alert("Seans kaydedilemedi: " + e.message);
+        }
+      });
+
+      saveTitleBtn.addEventListener("click", async () => {
+        const t = (bookTitleEl.value || "").trim();
+        if (!t) return alert("Kitap adı boş olamaz.");
+        try {
+          await updateBook({ title: t });
+          saveToLocalStorage();
+          alert("Kitap adı güncellendi.");
+        } catch (e) {
+          console.error(e);
+          alert("Güncellenemedi: " + e.message);
+        }
+      });
+
+      saveSummaryBtn.addEventListener("click", async () => {
+        const total = parseInt(totalPagesEl.value, 10);
+        const started = startedAtEl.value
+          ? new Date(startedAtEl.value + "T00:00:00").toISOString()
+          : null;
+
+        try {
+          await updateBook({
+            totalPages: Number.isNaN(total) ? undefined : total,
+            startedAt: started || undefined,
+          });
+          saveToLocalStorage();
+          alert("Özet bilgileri kaydedildi.");
+        } catch (e) {
+          console.error(e);
+          alert("Kaydedilemedi: " + e.message);
+        }
+      });
+
+      // ---- İlk Yükleme ----
+      (async function init() {
+        try {
+          const [{ book, lastSession }, sessions] = await Promise.all([
+            fetchBook(),
+            fetchSessions(),
+          ]);
+          const hasLS = !!localStorage.getItem(LS_KEY);
+
+          // toplam okunan süre (kayıtlı seanslar)
+          totalElapsedMs = sessions.reduce(
+            (acc, s) => acc + (s.elapsedMs || 0),
+            0
+          );
+          updateTotalTimeUI();
+
+          if (!hasLS) {
+            if (book.title) bookTitleEl.value = book.title;
+
+            if (book.totalPages != null) totalPagesEl.value = book.totalPages;
+            if (book.startedAt) {
+              startedAtEl.value = book.startedAt.slice(0, 10);
+            }
+
+            if (lastSession) {
+              if (lastSession.startPage != null)
+                startPageEl.value = lastSession.startPage;
+              if (lastSession.currentPage != null)
+                currentPageEl.value = lastSession.currentPage;
+            }
+            saveToLocalStorage();
+          } else {
+            loadFromLocalStorage(); // LS öncelikli
+          }
+        } catch (e) {
+          console.error(e);
+          loadFromLocalStorage();
+        }
+        updateTimerUI();
+        updatePagesUI();
+        updateSummaryDerived();
+
+        // Varsayılan olarak başlangıç tarihi yoksa bugünü ata (bir kere)
+        if (!startedAtEl.value) {
+          const today = new Date();
+          const iso = today.toISOString().slice(0, 10);
+          startedAtEl.value = iso;
+          updateSummaryDerived();
+          saveToLocalStorage();
+        }
+      })();
+    </script>
+  </body>
+</html>
