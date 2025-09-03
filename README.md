@@ -18,7 +18,7 @@ Node.js, Express, MongoDB ve saf HTML/CSS/JS kullanılarak geliştirilmiştir.
 
 - ⏱ **Okuma Seansları**
   - Kronometre başlat/durdur/sıfırla
-  - Başlangıç & bitiş sayfası girilerek **okunan sayfa sayısı** (dahilî: son − ilk + 1) hesaplanır
+  - Başlangıç & bitiş sayfası girilerek **okunan sayfa sayısı** hesaplanır
   - Ortalama okuma hızı (dk/sayfa) otomatik bulunur
   - Seans verileri MongoDB’ye kaydedilir
 
